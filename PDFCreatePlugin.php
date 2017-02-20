@@ -21,6 +21,7 @@ class PDFCreatePlugin extends Omeka_Plugin_AbstractPlugin
 
     public function hookInstall() {
         mkdir(FILES_DIR . DIRECTORY_SEPARATOR . 'ocr');
+        mkdir(FILES_DIR . DIRECTORY_SEPARATOR . 'pdfs');
     }
 
     public function hookBeforeSaveFile($args)
