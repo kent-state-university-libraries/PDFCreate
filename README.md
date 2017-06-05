@@ -10,6 +10,8 @@ Aggregates multiple TIFFs for one item into single OCR'd PDF/a-1b PDF via Ghosts
 
 ## Install
 
+This plugin requires the [PdfText plugin](https://github.com/omeka/plugin-PdfText)
+
 The server-side software needed to peform the OCR extraction is [Ghostscript](https://www.ghostscript.com/) and [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/README.md). This is the exact versions of the required software verified to work with this plugin (running on Red Hat Enterprise Linux 7):
 
 * GPL Ghostscript 9.07 (2013-02-14)
