@@ -3,13 +3,16 @@
 /**
  * @author  Joe Corall <jcorall@kent.edu>
  *
- * @todo integrate with Google’s Cloud Vision API
+ * @todo integrate with Google’s Cloud Vision API to allow alternative to tesseract req
  * @todo batch hook operations to speed up file uploads
- * @todo document software requirements/setup
  * @todo smarter checking to regenerate OCR/PDF on edits
  * @todo add link to PDF in Files
  * @todo cleanup on file/item delete
+ * @todo allow admin to specify criteria on what TIFFs to create PDFs from based on a metadata search
  */
+
+define('PDF_CREATE_OCR_DIR', FILES_DIR . DIRECTORY_SEPARATOR . 'ocr');
+define('PDF_CREATE_PDF_DIR', FILES_DIR . DIRECTORY_SEPARATOR . 'pdfs' );
 
 class PDFCreatePlugin extends Omeka_Plugin_AbstractPlugin
 {
@@ -20,8 +23,8 @@ class PDFCreatePlugin extends Omeka_Plugin_AbstractPlugin
     );
 
     public function hookInstall() {
-        mkdir(FILES_DIR . DIRECTORY_SEPARATOR . 'ocr');
-        mkdir(FILES_DIR . DIRECTORY_SEPARATOR . 'pdfs');
+        mkdir(PDF_CREATE_OCR_DIR);
+        mkdir(PDF_CREATE_PDF_DIR);
     }
 
     public function hookBeforeSaveFile($args)
@@ -33,7 +36,7 @@ class PDFCreatePlugin extends Omeka_Plugin_AbstractPlugin
         }
 
         // make the directory the item ID and create it if it doesn't exist
-        $ocr_dir = FILES_DIR . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $file->item_id;
+        $ocr_dir = PDF_CREATE_OCR_DIR. DIRECTORY_SEPARATOR . $file->item_id;
         if (!is_dir($ocr_dir)) {
             mkdir($ocr_dir);
         }
@@ -79,7 +82,7 @@ class PDFCreatePlugin extends Omeka_Plugin_AbstractPlugin
         $item = $args['record'];
 
         if ($item->public) {
-            $ocr_dir = FILES_DIR . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $item->id;
+            $ocr_dir = PDF_CREATE_OCR_DIR. DIRECTORY_SEPARATOR . $item->id;
             $metadata_file = $ocr_dir . DIRECTORY_SEPARATOR . 'metadata.txt';
             // this metadata.txt file is needed to create a valid PDF/a-1b document
             // so if it isn't there, add it.
@@ -91,7 +94,7 @@ class PDFCreatePlugin extends Omeka_Plugin_AbstractPlugin
             }
 
             // set the PDF's filename to the item ID and store it in the "pdfs" directory
-            $pdf_file = FILES_DIR . DIRECTORY_SEPARATOR . 'pdfs' . DIRECTORY_SEPARATOR . $item->id . '.pdf';
+            $pdf_file = PDF_CREATE_PDF_DIR. DIRECTORY_SEPARATOR . $item->id . '.pdf';
 
             // see if the PDF is already generated
             $pdf_exists = file_exists($pdf_file);
