@@ -41,8 +41,13 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
             // if this file is being uploaded right now, the temp file will exist in the /tmp directory
             // otherwise the file will already have been moved into its production location
             // so setup the proper path
-            $tmp_file = empty($args['insert']) ? FILES_DIR . DIRECTORY_SEPARATOR . 'original' : sys_get_temp_dir();
-            $tmp_file .= DIRECTORY_SEPARATOR . $file->filename;
+            $tmp_file = FILES_DIR . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . $file->filename;
+            if (!file_exists($tmp_file)) {
+                $tmp_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $file->filename;
+                if (!file_exists($tmp_file)) {
+                    // @todo doesn't seem possible, but how to handle???
+                }
+            }
 
             // create the OCR'd PDF
             $cmd = "/usr/local/bin/tesseract -l eng -psm 3 $tmp_file $ocr_file pdf";
