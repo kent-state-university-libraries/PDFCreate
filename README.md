@@ -6,7 +6,7 @@ Generates OCR via tesseract.
 
 Stores OCR'd text via PdfText plugin's metadata element for site searching.
 
-Aggregates multiple TIFFs for one item into single OCR'd PDF/a-1b PDF via Ghostscript.
+Aggregates multiple TIFFs for one item into single OCR'd PDF/a-1b PDF via Ghostscript. When the aggregated PDF is created, it can be found at http://example.com/path/to/your/files/directory/pdfs/ITEM_ID.pdf
 
 ## Install
 
