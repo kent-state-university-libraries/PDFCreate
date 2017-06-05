@@ -66,6 +66,10 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
             }
         }
 
+
+        // the name of the aggregated PDF File
+        $pdf_file = PDF_CREATE_PDF_DIR . DIRECTORY_SEPARATOR . $this->_item->id . '.pdf';
+
         // if this item is public, make sure the aggregated PDF has been created
         if ($this->_item->public) {
             $metadata_file = $ocr_dir . DIRECTORY_SEPARATOR . 'metadata.txt';
@@ -79,9 +83,6 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
                 fwrite($f, '/DOCINFO pdfmark');
                 fclose($f);
             }
-
-            // set the PDF's filename to the item ID and store it in the "pdfs" directory
-            $pdf_file = PDF_CREATE_PDF_DIR . DIRECTORY_SEPARATOR . $this->_item->id . '.pdf';
 
             // see if the PDF is already generated
             $pdf_exists = file_exists($pdf_file);
@@ -117,6 +118,11 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
                     $metadata_file";
                 exec($cmd);
             }
+        }
+        // else this item is not public
+        // if this item is going from public to non-public, remove the file
+        elseif (file_exists($pdf_file)) {
+            unlink($pdf_file);
         }
     }
 }
