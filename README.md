@@ -1,18 +1,18 @@
 # PDF Create
 
-Omeka plugin to store OCR for uploaded TIFFs.
+Omeka plugin that creates OCR'd PDFs from TIFFs. If you have multiple TIFFs for a single item, this provides any easy way to aggregate the TIFFs into a single file for easy viewing/downloading.
 
-Generates OCR via tesseract.
+Generates OCR via [Tesseract](https://github.com/tesseract-ocr/tesseract).
 
-Stores OCR'd text via PdfText plugin's metadata element for site searching.
+Stores OCR'd text via [PdfText plugin's](https://github.com/omeka/plugin-PdfText) metadata element for site searching.
 
-Aggregates multiple TIFFs for one item into single OCR'd PDF/a-1b PDF via Ghostscript. When the aggregated PDF is created, it can be found at http://example.com/path/to/your/files/directory/pdfs/ITEM_ID.pdf
+Aggregates multiple TIFFs for one item into single OCR'd PDF/a-1b PDF via [Ghostscript](https://www.ghostscript.com/). When the aggregated PDF is created, it can be found at http://example.com/path/to/your/files/directory/pdfs/ITEM_ID.pdf
 
 ## Install
 
 This plugin requires the [PdfText plugin](https://github.com/omeka/plugin-PdfText)
 
-The server-side software needed to peform the OCR extraction is [Ghostscript](https://www.ghostscript.com/) and [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/README.md). This is the exact versions of the required software verified to work with this plugin (running on Red Hat Enterprise Linux 7):
+The server-side software needed to peform the OCR extraction is [Ghostscript](https://www.ghostscript.com/) and [Tesseract](https://github.com/tesseract-ocr/tesseract). This is the exact versions of the required software verified to work with this plugin (running on Red Hat Enterprise Linux 7):
 
 * GPL Ghostscript 9.07 (2013-02-14)
 * [Tesseract 3.04.01](https://github.com/tesseract-ocr/tesseract/releases/tag/3.04.01)

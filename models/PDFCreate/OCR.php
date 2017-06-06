@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * A class to process PDFs in the background so users don't have to wait when saving items/files
+ *
+ * @package PDFCreate
+ * @author Joe Corall <jcorall@kent.edu>
+ */
+
 class PDFCreate_OCR extends Omeka_Job_AbstractJob
 {
     private $_item;
@@ -16,15 +23,17 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
         // keep track of all the OCR'd PDFs so if we need to create
         // the aggregated PDF we'll have all the files handy
         $ocr_pdfs = array();
-        $ocr_dir = PDF_CREATE_OCR_DIR . DIRECTORY_SEPARATOR . $this->_item->id;
-        if (!is_dir($ocr_dir)) {
-            mkdir($ocr_dir);
-        }
         foreach ($this->_item->Files as $file) {
 
             // don't process if not a TIFF
             if ($file->mime_type !== 'image/tiff') {
                 continue;
+            }
+
+            // if the directory doesn't exist to store all the PDFs, create it
+            $ocr_dir = PDF_CREATE_OCR_DIR . DIRECTORY_SEPARATOR . $this->_item->id;
+            if (!is_dir($ocr_dir)) {
+                mkdir($ocr_dir);
             }
 
             // set $ocr_file to the original file name minus the ".tiff" extension
@@ -49,11 +58,11 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
                 }
             }
 
-            // create the OCR'd PDF
+            // create the OCR'd PDF for this TIFF
             $cmd = "/usr/local/bin/tesseract -l eng -psm 3 $tmp_file $ocr_file pdf";
             exec($cmd);
 
-            // get the OCR and put it in a text file
+            // get the OCR text for the TIFF and put it in a text file
             $cmd = "/usr/local/bin/tesseract -l eng -psm 3 $tmp_file $ocr_file";
             exec($cmd);
 
@@ -89,7 +98,7 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
                 fclose($f);
             }
 
-            // see if the PDF is already generated
+            // see if the aggregated PDF has already been created
             $pdf_exists = file_exists($pdf_file);
             // if it is already generated, see when it was last updated
             $pdf_created = $pdf_exists ? filemtime($pdf_file) : 0;
@@ -105,7 +114,8 @@ class PDFCreate_OCR extends Omeka_Job_AbstractJob
                 }
             }
 
-            // if the aggregated PDF doesn't exist OR a new PDF has been made since it was created
+            // if the aggregated PDF doesn't exist
+            // OR a new PDF has been made since the aggregated PDF was created
             // generate the PDF
             if (!$pdf_exists || $pdf_created < $last_ocr_edited) {
                 $cmd = "/usr/bin/gs -dBATCH \
