@@ -37,7 +37,7 @@ class PDFCreatePlugin extends Omeka_Plugin_AbstractPlugin
 
         // after saving an item send a background job to generate any PDFs needed
         $jobDispatcher = Zend_Registry::get('job_dispatcher');
-        $jobDispatcher->setQueueName('pdfcreate_ocr');
+        $jobDispatcher->setQueueNameLongRunning('pdfcreate_ocr');
         try {
             $options = array(
                 // don't want to rely on an item object getting passed into the separate job/thread
